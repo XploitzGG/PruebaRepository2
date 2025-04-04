@@ -1,14 +1,14 @@
 package mx.uam.libreria.prueba.servicio.Impl;
 
 import mx.uam.libreria.prueba.entidades.Cliente;
-import mx.uam.libreria.prueba.servicio.ClienteService;
 import mx.uam.libreria.prueba.repositorio.ClienteRepository;
+import mx.uam.libreria.prueba.servicio.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 
-@Service // Anotación para que Spring reconozca esta clase como un servicio
+@Service
 public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
@@ -20,13 +20,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente guardarCliente(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public Optional<Cliente> obtenerClientePorId(Long id) {
+        return clienteRepository.findById(id);
     }
 
     @Override
-    public Cliente obtenerClientePorId(Long id) {
-        return clienteRepository.findById(id).orElse(null);
+    public Cliente guardarCliente(Cliente cliente) {
+        return clienteRepository.save(cliente);
     }
 
     @Override
@@ -37,5 +37,21 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public void eliminarCliente(Long id) {
         clienteRepository.deleteById(id);
+    }
+
+    // Implementación de nuevos métodos
+    @Override
+    public List<Cliente> buscarPorMatriculacion(boolean matriculado) {
+        return clienteRepository.findByMatriculado(matriculado);
+    }
+
+    @Override
+    public List<Cliente> buscarPorMatricula(String matricula) {
+        return clienteRepository.findByMatriculaContainingIgnoreCase(matricula);
+    }
+
+    @Override
+    public boolean existeCliente(Long id) {
+        return clienteRepository.existsById(id);
     }
 }
